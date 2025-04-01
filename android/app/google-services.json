@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "228913782377",
+    "project_id": "weather-forcast-dev",
+    "storage_bucket": "weather-forcast-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228913782377:android:f21fa51c844a8479fa0cf8",
+        "android_client_info": {
+          "package_name": "com.example.gorouter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxhad-TUNKFwxhXcxsarebHlROPBm9f_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
