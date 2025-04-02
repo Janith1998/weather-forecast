@@ -10,12 +10,15 @@ import 'package:gorouter/pages/starter_page.dart';
 import 'package:gorouter/services/app_state.dart';
 
 class RouterClass {
+  final User? authState;
   static bool splashCompleted = false;
 
-  final router = GoRouter(
+  RouterClass({this.authState});
+
+  late final router = GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: true,
-    redirect: (BuildContext context, GoRouterState state) async {
+    redirect: (context, state) async {
       // 1. Always show splash first
       if (!splashCompleted && state.uri.path != '/') {
         debugPrint('Redirect: Showing splash first');
@@ -23,7 +26,8 @@ class RouterClass {
       }
 
       // 2. Get all required states
-      final isLoggedIn = FirebaseAuth.instance.currentUser != null;
+      // final isLoggedIn = FirebaseAuth.instance.currentUser != null;
+      final isLoggedIn = authState != null;
       final isFirstLaunch = await AppState.isFirstLaunch;
       final isAtSplash = state.uri.path == '/';
       final isAtStart = state.uri.path == '/start';
