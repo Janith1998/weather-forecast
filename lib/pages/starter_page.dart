@@ -13,59 +13,134 @@ class StarterPage extends StatefulWidget {
 class _StarterPageState extends State<StarterPage> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Stack(
         children: [
-          Column(
-            children: [
-              ClipPath(
-                clipper: BottomCurveClipper(),
-                child: Image.asset(
-                  'assets/images/imgStart.jpg',
-                  fit: BoxFit.cover,
-                  width: double.infinity,
+          // Background with gradient overlay
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/start.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.2),
+                    Colors.black.withOpacity(0.5),
+                  ],
                 ),
               ),
+            ),
+          ),
 
-              ElevatedButton(
-                onPressed: () async {
-                  debugPrint('Completing onboarding...');
-                  await AppState.completeOnboarding();
-                  final prefs = await SharedPreferences.getInstance();
-                  debugPrint(
-                    'Onboarding complete status: ${prefs.getBool('onboarding_complete')}',
-                  );
-                  if (mounted) {
-                    debugPrint('Navigating to /login');
-                    context.go('/login');
-                  }
-                },
-                child: const Text("Let's go →"),
+          // Content
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Spacer(),
+                  Text(
+                    'Welcome To',
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.w900,
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                    ),
+                  ),
+
+                  RichText(
+                    text: const TextSpan(
+                      style: TextStyle(
+                        fontSize: 35,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: 'Weather ',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        TextSpan(
+                          text: 'Node',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 2, 182, 14),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Description text
+                  Text(
+                    'The best way to know about Weather. Start your journey with us today.',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: Colors.white.withOpacity(0.9),
+                    ),
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  // Get started button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        debugPrint('Completing onboarding...');
+                        await AppState.completeOnboarding();
+                        final prefs = await SharedPreferences.getInstance();
+                        debugPrint(
+                          'Onboarding complete status: ${prefs.getBool('onboarding_complete')}',
+                        );
+                        if (mounted) {
+                          debugPrint('Navigating to /login');
+                          context.go('/login');
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        //backgroundColor: theme.colorScheme.primary,
+                        backgroundColor: const Color.fromARGB(255, 2, 8, 82),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Get Started",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Icon(Icons.arrow_forward, size: 20),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+                ],
               ),
-            ],
+            ),
           ),
         ],
       ),
     );
   }
-}
-
-class BottomCurveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0, size.height - 30);
-    path.quadraticBezierTo(
-      size.width / 3,
-      size.height + 30,
-      size.width,
-      size.height - 100,
-    );
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

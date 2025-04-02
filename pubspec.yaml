@@ -28,6 +28,7 @@ flutter:
   uses-material-design: true
   assets:
       - assets/images/imgStart.jpg
+      - assets/images/start.jpg
       - assets/animations/rain.json
       - assets/animations/cloudy.json
       - assets/animations/loading.json

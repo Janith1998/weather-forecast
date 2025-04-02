@@ -38,11 +38,11 @@ class _SplashScreenState extends State<SplashScreen> {
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     children: <TextSpan>[
                       TextSpan(
-                        text: 'Elegant ',
+                        text: 'Weather ',
                         style: TextStyle(color: Colors.white),
                       ),
                       TextSpan(
-                        text: 'Media',
+                        text: 'Node',
                         style: TextStyle(
                           color: Color.fromARGB(255, 2, 182, 14),
                         ),

@@ -112,7 +112,7 @@ class RegisterPageState extends State<RegisterPage> {
                                   fontWeight: FontWeight.w900,
                                 ),
                               ),
-                              const SizedBox(height: 30),
+                              const SizedBox(height: 100),
 
                               // Name Field
                               TextFormField(
