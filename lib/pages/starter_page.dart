@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gorouter/services/app_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StarterPage extends StatefulWidget {
   const StarterPage({super.key});
@@ -26,10 +28,19 @@ class _StarterPageState extends State<StarterPage> {
               ),
 
               ElevatedButton(
-                onPressed: () {
-                  GoRouter.of(context).go('/login');
+                onPressed: () async {
+                  debugPrint('Completing onboarding...');
+                  await AppState.completeOnboarding();
+                  final prefs = await SharedPreferences.getInstance();
+                  debugPrint(
+                    'Onboarding complete status: ${prefs.getBool('onboarding_complete')}',
+                  );
+                  if (mounted) {
+                    debugPrint('Navigating to /login');
+                    context.go('/login');
+                  }
                 },
-                child: Text("Lets go ->"),
+                child: const Text("Let's go →"),
               ),
             ],
           ),
@@ -46,9 +57,9 @@ class BottomCurveClipper extends CustomClipper<Path> {
     path.lineTo(0, size.height - 30);
     path.quadraticBezierTo(
       size.width / 3,
-      size.height + 30, // Control point weighted to left
+      size.height + 30,
       size.width,
-      size.height - 100, // Right side ends higher
+      size.height - 100,
     );
     path.lineTo(size.width, 0);
     path.close();

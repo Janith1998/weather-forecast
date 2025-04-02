@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:gorouter/router/router.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,9 +14,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 3), () {
-      GoRouter.of(context).go('/start');
-    });
+    _navigate();
+  }
+
+  Future<void> _navigate() async {
+    await Future.delayed(4.seconds);
+    RouterClass.completeSplash();
+    if (mounted) {
+      context.go('/'); // Trigger redirect
+    }
   }
 
   @override
@@ -27,13 +34,9 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             RichText(
-                  text: TextSpan(
-                    style: TextStyle(
-                      fontSize: 30,
-                      // fontFamily: 'Poppins',
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: const <TextSpan>[
+                  text: const TextSpan(
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    children: <TextSpan>[
                       TextSpan(
                         text: 'Elegant ',
                         style: TextStyle(color: Colors.white),

@@ -63,7 +63,6 @@ class LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background with wavy bottom
           Column(
             children: [
               Expanded(
@@ -128,7 +127,6 @@ class LoginPageState extends State<LoginPage> {
                             ),
                             const SizedBox(height: 35),
 
-                            // Password Field
                             TextFormField(
                               controller: passwordController,
                               obscureText: true,
@@ -146,7 +144,6 @@ class LoginPageState extends State<LoginPage> {
                             ),
                             const SizedBox(height: 20),
 
-                            // Sign In Button
                             Padding(
                               padding: const EdgeInsets.only(top: 30),
                               child: SizedBox(
@@ -176,10 +173,9 @@ class LoginPageState extends State<LoginPage> {
                               ),
                             ),
 
-                            // Register Link
                             TextButton(
                               onPressed: () {
-                                GoRouter.of(context).go('/register');
+                                GoRouter.of(context).go('/login/register');
                               },
                               child: const Text(
                                 'Create an account',

@@ -1,243 +1,4 @@
-// import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
-// import 'package:gorouter/locator.dart';
-// import 'package:gorouter/model/weather_model.dart';
-// import 'package:gorouter/services/weather_service.dart';
-
-// class Homepage extends StatefulWidget {
-//   const Homepage({super.key});
-
-//   @override
-//   State<Homepage> createState() => HomepageState();
-// }
-
-// class HomepageState extends State<Homepage> {
-//   final WeatherService weatherService = getIt<WeatherService>();
-//   final TextEditingController cityController = TextEditingController();
-//   WeatherData? weatherData;
-//   bool isLoading = false;
-//   String errorMessage = '';
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     loadDefaultWeather();
-//   }
-
-//   Future<void> loadDefaultWeather() async {
-//     await fetchWeatherByLocation(6.927079, 79.861244);
-//   }
-
-//   Future<void> fetchWeather(String city) async {
-//     if (city.isEmpty) return;
-
-//     setState(() {
-//       isLoading = true;
-//       errorMessage = '';
-//     });
-
-//     try {
-//       final weather = await weatherService.getWeather(city);
-//       setState(() => weatherData = weather);
-//     } catch (e) {
-//       setState(() => errorMessage = e.toString());
-//     } finally {
-//       setState(() => isLoading = false);
-//     }
-//   }
-
-//   Future<void> fetchWeatherByLocation(double lat, double lon) async {
-//     setState(() {
-//       isLoading = true;
-//       errorMessage = '';
-//     });
-
-//     try {
-//       final weather = await weatherService.getWeatherByLocation(lat, lon);
-//       setState(() {
-//         weatherData = weather;
-//         cityController.text = weather.name;
-//       });
-//     } catch (e) {
-//       setState(() => errorMessage = e.toString());
-//     } finally {
-//       setState(() => isLoading = false);
-//     }
-//   }
-
-//   @override
-//   void dispose() {
-//     cityController.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.grey[100],
-//       appBar: AppBar(
-//         title: const Text('Weather Forecast'),
-//         actions: [
-//           IconButton(
-//             icon: const Icon(Icons.person),
-//             onPressed: () => GoRouter.of(context).go('/profile'),
-//           ),
-//         ],
-//       ),
-//       body: SingleChildScrollView(
-//         padding: const EdgeInsets.all(16),
-//         child: Column(
-//           children: [
-//             _buildSearchBar(),
-//             const SizedBox(height: 20),
-//             _buildWeatherContent(),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildSearchBar() {
-//     return Card(
-//       elevation: 2,
-//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-//       child: Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 16),
-//         child: Row(
-//           children: [
-//             Expanded(
-//               child: TextField(
-//                 controller: cityController,
-//                 decoration: const InputDecoration(
-//                   hintText: 'Enter city name',
-//                   border: InputBorder.none,
-//                 ),
-//                 onSubmitted: (value) => fetchWeather(value),
-//               ),
-//             ),
-//             IconButton(
-//               icon: const Icon(Icons.search),
-//               onPressed: () => fetchWeather(cityController.text),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildWeatherContent() {
-//     if (isLoading) {
-//       return const Center(child: CircularProgressIndicator());
-//     }
-
-//     if (errorMessage.isNotEmpty) {
-//       return Center(
-//         child: Text(errorMessage, style: const TextStyle(color: Colors.red)),
-//       );
-//     }
-
-//     if (weatherData == null) {
-//       return const Center(
-//         child: Text(
-//           'Search for a city to see weather',
-//           style: TextStyle(fontSize: 18),
-//         ),
-//       );
-//     }
-
-//     return buildWeatherCard();
-//   }
-
-//   Widget buildWeatherCard() {
-//     final weather = weatherData!;
-//     final mainWeather = weather.weather.isNotEmpty ? weather.weather[0] : null;
-
-//     return Card(
-//       elevation: 4,
-//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-//       child: Padding(
-//         padding: const EdgeInsets.all(20),
-//         child: Column(
-//           children: [
-//             Text(
-//               weather.name,
-//               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//             ),
-//             const SizedBox(height: 10),
-//             if (mainWeather != null) ...[
-//               Text(
-//                 mainWeather.main,
-//                 style: const TextStyle(fontSize: 18, color: Colors.blue),
-//               ),
-//               const SizedBox(height: 5),
-//               Text(
-//                 mainWeather.description,
-//                 style: const TextStyle(fontSize: 14, color: Colors.grey),
-//               ),
-//             ],
-//             const SizedBox(height: 20),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceAround,
-//               children: [
-//                 buildWeatherInfo(
-//                   '${weather.temperature.current.toStringAsFixed(1)}°C',
-//                   'Current',
-//                   Icons.thermostat,
-//                 ),
-//                 buildWeatherInfo(
-//                   '${weather.minTemperature.toStringAsFixed(1)}°C',
-//                   'Min',
-//                   Icons.arrow_downward,
-//                 ),
-//                 buildWeatherInfo(
-//                   '${weather.maxTemperature.toStringAsFixed(1)}°C',
-//                   'Max',
-//                   Icons.arrow_upward,
-//                 ),
-//               ],
-//             ),
-//             const SizedBox(height: 20),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceAround,
-//               children: [
-//                 buildWeatherInfo(
-//                   '${weather.humidity}%',
-//                   'Humidity',
-//                   Icons.water_drop,
-//                 ),
-//                 buildWeatherInfo(
-//                   '${weather.wind.speed} m/s',
-//                   'Wind',
-//                   Icons.air,
-//                 ),
-//                 buildWeatherInfo(
-//                   '${weather.pressure} hPa',
-//                   'Pressure',
-//                   Icons.speed,
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget buildWeatherInfo(String value, String label, IconData icon) {
-//     return Column(
-//       children: [
-//         Icon(icon, size: 30, color: Colors.blue),
-//         const SizedBox(height: 5),
-//         Text(
-//           value,
-//           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-//         ),
-//         Text(label, style: const TextStyle(fontSize: 14, color: Colors.grey)),
-//       ],
-//     );
-//   }
-// }
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gorouter/locator.dart';
@@ -324,6 +85,24 @@ class HomepageState extends State<Homepage> {
         elevation: 0,
         centerTitle: false,
         actions: [
+          // In Homepage's logout button:
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              try {
+                await FirebaseAuth.instance.signOut();
+                if (mounted) {
+                  context.go('/login');
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Logout failed: ${e.toString()}')),
+                  );
+                }
+              }
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.person_outline, color: Colors.black87),
             onPressed: () => GoRouter.of(context).go('/profile'),
@@ -424,7 +203,7 @@ class HomepageState extends State<Homepage> {
         children: [
           SizedBox(height: MediaQuery.of(context).size.height * 0.2),
           Image.asset(
-            'assets/weather_placeholder.png', // Replace with your asset
+            'assets/weather_placeholder.png',
             width: 150,
             height: 150,
             color: Colors.grey[300],
