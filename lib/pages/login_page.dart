@@ -81,115 +81,118 @@ class LoginPageState extends State<LoginPage> {
           ),
 
           // Login Form
-          Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.only(top: 150.0),
-              child: Column(
-                children: [
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Form(
-                        key: formKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                              'Login',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 252, 149, 24),
-                                fontSize: 44,
-                                fontWeight: FontWeight.w900,
+          AbsorbPointer(
+            absorbing: isLoading,
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.only(top: 150.0),
+                child: Column(
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Form(
+                          key: formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
+                                'Login',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 252, 149, 24),
+                                  fontSize: 44,
+                                  fontWeight: FontWeight.w900,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 100),
+                              const SizedBox(height: 100),
 
-                            // Email Field
-                            TextFormField(
-                              controller: emailController,
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: const InputDecoration(
-                                labelText: 'Email',
-                                prefixIcon: Icon(Icons.email),
-                                border: OutlineInputBorder(),
+                              // Email Field
+                              TextFormField(
+                                controller: emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: const InputDecoration(
+                                  labelText: 'Email',
+                                  prefixIcon: Icon(Icons.email),
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your email';
+                                  }
+                                  if (!RegExp(
+                                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                                  ).hasMatch(value)) {
+                                    return 'Please enter a valid email';
+                                  }
+                                  return null;
+                                },
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your email';
-                                }
-                                if (!RegExp(
-                                  r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                                ).hasMatch(value)) {
-                                  return 'Please enter a valid email';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 35),
+                              const SizedBox(height: 35),
 
-                            TextFormField(
-                              controller: passwordController,
-                              obscureText: true,
-                              decoration: const InputDecoration(
-                                labelText: 'Password',
-                                prefixIcon: Icon(Icons.lock),
-                                border: OutlineInputBorder(),
+                              TextFormField(
+                                controller: passwordController,
+                                obscureText: true,
+                                decoration: const InputDecoration(
+                                  labelText: 'Password',
+                                  prefixIcon: Icon(Icons.lock),
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your password';
+                                  }
+                                  return null;
+                                },
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your password';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 20),
+                              const SizedBox(height: 20),
 
-                            Padding(
-                              padding: const EdgeInsets.only(top: 30),
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: isLoading ? null : login,
-                                  child:
-                                      isLoading
-                                          ? const CircularProgressIndicator(
-                                            color: Colors.white,
-                                          )
-                                          : const Text('Sign In'),
-                                  style: ElevatedButton.styleFrom(
-                                    minimumSize: const Size(0, 55),
-                                    textStyle: const TextStyle(
-                                      fontWeight: FontWeight.w900,
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: isLoading ? null : login,
+                                    child:
+                                        isLoading
+                                            ? const CircularProgressIndicator(
+                                              color: Colors.white,
+                                            )
+                                            : const Text('Sign In'),
+                                    style: ElevatedButton.styleFrom(
+                                      minimumSize: const Size(0, 55),
+                                      textStyle: const TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                      backgroundColor: const Color.fromARGB(
+                                        255,
+                                        31,
+                                        31,
+                                        79,
+                                      ),
+                                      foregroundColor: Colors.white,
                                     ),
-                                    backgroundColor: const Color.fromARGB(
-                                      255,
-                                      31,
-                                      31,
-                                      79,
-                                    ),
-                                    foregroundColor: Colors.white,
                                   ),
                                 ),
                               ),
-                            ),
 
-                            TextButton(
-                              onPressed: () {
-                                GoRouter.of(context).go('/login/register');
-                              },
-                              child: const Text(
-                                'Create an account',
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 252, 149, 24),
+                              TextButton(
+                                onPressed: () {
+                                  GoRouter.of(context).go('/login/register');
+                                },
+                                child: const Text(
+                                  'Create an account',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 252, 149, 24),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

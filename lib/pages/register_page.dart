@@ -89,133 +89,136 @@ class RegisterPageState extends State<RegisterPage> {
           ),
 
           // Register Form
-          Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.only(top: 120.0),
-              child: Column(
-                children: [
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Form(
-                        key: formKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                              'Register',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 252, 149, 24),
-                                fontSize: 44,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                            const SizedBox(height: 30),
-
-                            // Name Field
-                            TextFormField(
-                              controller: nameController,
-                              decoration: const InputDecoration(
-                                labelText: 'Full Name',
-                                prefixIcon: Icon(Icons.person),
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your name';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 20),
-
-                            // Email Field
-                            TextFormField(
-                              controller: emailController,
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: const InputDecoration(
-                                labelText: 'Email',
-                                prefixIcon: Icon(Icons.email),
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your email';
-                                }
-                                if (!RegExp(
-                                  r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                                ).hasMatch(value)) {
-                                  return 'Please enter a valid email';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 20),
-
-                            TextFormField(
-                              controller: passwordController,
-                              obscureText: true,
-                              decoration: const InputDecoration(
-                                labelText: 'Password',
-                                prefixIcon: Icon(Icons.lock),
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter a password';
-                                }
-                                if (value.length < 6) {
-                                  return 'Password must be at least 6 characters';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 30),
-
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: isLoading ? null : register,
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: const Size(0, 55),
-                                  textStyle: const TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                  backgroundColor: const Color.fromARGB(
-                                    255,
-                                    31,
-                                    31,
-                                    79,
-                                  ),
-                                  foregroundColor: Colors.white,
-                                ),
-                                child:
-                                    isLoading
-                                        ? const CircularProgressIndicator(
-                                          color: Colors.white,
-                                        )
-                                        : const Text('Register'),
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-
-                            TextButton(
-                              onPressed: () {
-                                GoRouter.of(context).go('/login');
-                              },
-                              child: const Text(
-                                'Already have an account? Login',
+          AbsorbPointer(
+            absorbing: isLoading,
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.only(top: 120.0),
+                child: Column(
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Form(
+                          key: formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
+                                'Register',
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 252, 149, 24),
+                                  fontSize: 44,
+                                  fontWeight: FontWeight.w900,
                                 ),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 30),
+
+                              // Name Field
+                              TextFormField(
+                                controller: nameController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Full Name',
+                                  prefixIcon: Icon(Icons.person),
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+
+                              // Email Field
+                              TextFormField(
+                                controller: emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: const InputDecoration(
+                                  labelText: 'Email',
+                                  prefixIcon: Icon(Icons.email),
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your email';
+                                  }
+                                  if (!RegExp(
+                                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                                  ).hasMatch(value)) {
+                                    return 'Please enter a valid email';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+
+                              TextFormField(
+                                controller: passwordController,
+                                obscureText: true,
+                                decoration: const InputDecoration(
+                                  labelText: 'Password',
+                                  prefixIcon: Icon(Icons.lock),
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter a password';
+                                  }
+                                  if (value.length < 6) {
+                                    return 'Password must be at least 6 characters';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 30),
+
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: isLoading ? null : register,
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: const Size(0, 55),
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                    backgroundColor: const Color.fromARGB(
+                                      255,
+                                      31,
+                                      31,
+                                      79,
+                                    ),
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  child:
+                                      isLoading
+                                          ? const CircularProgressIndicator(
+                                            color: Colors.white,
+                                          )
+                                          : const Text('Register'),
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+
+                              TextButton(
+                                onPressed: () {
+                                  GoRouter.of(context).go('/login');
+                                },
+                                child: const Text(
+                                  'Already have an account? Login',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 252, 149, 24),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
