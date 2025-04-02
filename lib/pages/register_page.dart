@@ -71,7 +71,6 @@ class RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background with wavy bottom
           Column(
             children: [
               Expanded(
@@ -153,7 +152,6 @@ class RegisterPageState extends State<RegisterPage> {
                             ),
                             const SizedBox(height: 20),
 
-                            // Password Field
                             TextFormField(
                               controller: passwordController,
                               obscureText: true,
@@ -174,7 +172,6 @@ class RegisterPageState extends State<RegisterPage> {
                             ),
                             const SizedBox(height: 30),
 
-                            // Register Button
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
@@ -202,7 +199,6 @@ class RegisterPageState extends State<RegisterPage> {
                             ),
                             const SizedBox(height: 15),
 
-                            // Login Link
                             TextButton(
                               onPressed: () {
                                 GoRouter.of(context).go('/login');

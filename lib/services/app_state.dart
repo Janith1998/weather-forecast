@@ -6,7 +6,6 @@ class AppState {
 
   static Future<bool> get isFirstLaunch async {
     final prefs = await SharedPreferences.getInstance();
-    // More reliable first launch detection
     final isFirst = !prefs.containsKey(_keyOnboardingComplete);
     debugPrint('First launch check: $isFirst');
     return isFirst;

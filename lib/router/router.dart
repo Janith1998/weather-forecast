@@ -19,14 +19,11 @@ class RouterClass {
     initialLocation: '/',
     debugLogDiagnostics: true,
     redirect: (context, state) async {
-      // 1. Always show splash first
       if (!splashCompleted && state.uri.path != '/') {
         debugPrint('Redirect: Showing splash first');
         return '/';
       }
 
-      // 2. Get all required states
-      // final isLoggedIn = FirebaseAuth.instance.currentUser != null;
       final isLoggedIn = authState != null;
       final isFirstLaunch = await AppState.isFirstLaunch;
       final isAtSplash = state.uri.path == '/';
@@ -35,20 +32,17 @@ class RouterClass {
           state.uri.path.startsWith('/login') ||
           state.uri.path.startsWith('/register');
 
-      debugPrint('--- REDIRECT CHECK ---');
+      debugPrint('REDIRECT CHECK');
       debugPrint('isLoggedIn: $isLoggedIn');
       debugPrint('isFirstLaunch: $isFirstLaunch');
       debugPrint('currentPath: ${state.uri.path}');
 
-      // 3. Only process redirects after splash completes
       if (splashCompleted) {
-        // First launch flow - should have isLoggedIn = false
         if (isFirstLaunch && !isAtStart) {
           debugPrint('Redirect: First launch -> Start page');
           return '/start';
         }
 
-        // Auth flow
         if (isLoggedIn) {
           if (isAtSplash || isAtStart || isAtAuth) {
             debugPrint('Redirect: Logged in -> Home');

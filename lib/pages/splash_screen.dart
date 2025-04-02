@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(4.seconds);
     RouterClass.completeSplash();
     if (mounted) {
-      context.go('/'); // Trigger redirect
+      context.go('/');
     }
   }
 
