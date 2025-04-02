@@ -17,6 +17,7 @@ dependencies:
   firebase_auth: ^5.5.1
   get_it: ^8.0.3
   dio: ^5.8.0+1
+  lottie: ^2.3.1
 
 dev_dependencies:
   flutter_test:
@@ -27,6 +28,13 @@ flutter:
   uses-material-design: true
   assets:
       - assets/images/imgStart.jpg
+      - assets/animations/rain.json
+      - assets/animations/cloudy.json
+      - assets/animations/loading.json
+      - assets/animations/snow.json
+      - assets/animations/sunny.json
+      - assets/animations/thunder.json
+      - assets/animations/world-location.json
   # fonts:
   #   - family: Poppins
   #     fonts:

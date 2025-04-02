@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gorouter/locator.dart';
 import 'package:gorouter/router/router.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:gorouter/services/app_state.dart';
+//import 'package:gorouter/services/app_state.dart';
 import 'firebase_options.dart';
 
 void main() async {
