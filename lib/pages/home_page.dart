@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gorouter/locator.dart';
 import 'package:gorouter/model/weather_model.dart';
+import 'package:gorouter/services/theme_service.dart';
 import 'package:gorouter/services/weather_service.dart';
 import 'package:lottie/lottie.dart';
 
@@ -17,18 +17,18 @@ class Homepage extends StatefulWidget {
 class HomepageState extends State<Homepage> with TickerProviderStateMixin {
   final WeatherService weatherService = getIt<WeatherService>();
   final TextEditingController cityController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   WeatherData? weatherData;
   bool isLoading = false;
   String errorMessage = '';
+  String currentWeatherAnimation = 'assets/animations/sunny.json';
 
   // Animation controllers
   late AnimationController fadeController;
   late AnimationController slideController;
   late AnimationController scaleController;
-
-  // Weather animation
   late AnimationController weatherAnimationController;
-  String currentWeatherAnimation = 'assets/animations/sunny.json';
 
   @override
   void initState() {
@@ -55,7 +55,7 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
     );
 
     // Start animations
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    Future.delayed(Duration.zero, () {
       fadeController.forward();
       slideController.forward(from: 0.0);
       scaleController.forward(from: 0.0);
@@ -100,7 +100,9 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
       updateWeatherAnimation(weather);
       setState(() {
         weatherData = weather;
-        cityController.text = weather.name;
+        if (weather.name.isNotEmpty) {
+          cityController.text = weather.name;
+        }
       });
       playSuccessAnimation();
     } catch (e) {
@@ -154,9 +156,18 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final themeService = getIt<ThemeService>();
+    final isDarkMode = themeService.themeMode == ThemeMode.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      key: _scaffoldKey,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      drawer: _buildDrawer(context, themeService),
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
+          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+        ),
         title: AnimatedBuilder(
           animation: fadeController,
           builder: (context, child) {
@@ -164,11 +175,11 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
               opacity: fadeController.value,
               child: Transform.translate(
                 offset: Offset(0, 30 * (1 - fadeController.value)),
-                child: const Text(
+                child: Text(
                   'Weather Forecast',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: Theme.of(context).textTheme.titleLarge?.color,
                     fontSize: 22,
                   ),
                 ),
@@ -176,60 +187,9 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
             );
           },
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         centerTitle: false,
-        actions: [
-          FadeTransition(
-            opacity: fadeController,
-            child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0.5, 0),
-                end: Offset.zero,
-              ).animate(
-                CurvedAnimation(parent: fadeController, curve: Curves.easeOut),
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () async {
-                  try {
-                    await FirebaseAuth.instance.signOut();
-                    if (mounted) {
-                      context.go('/login');
-                    }
-                  } catch (e) {
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Logout failed: ${e.toString()}'),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                },
-              ),
-            ),
-          ),
-          FadeTransition(
-            opacity: fadeController,
-            child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0.5, 0),
-                end: Offset.zero,
-              ).animate(
-                CurvedAnimation(parent: fadeController, curve: Curves.easeOut),
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.person_outline, color: Colors.black87),
-                onPressed: () => GoRouter.of(context).go('/profile'),
-              ),
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -245,6 +205,77 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildDrawer(BuildContext context, ThemeService themeService) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'Settings',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+          SwitchListTile(
+            title: const Text('Dark Mode'),
+            value: themeService.themeMode == ThemeMode.dark,
+            onChanged: (value) async {
+              await themeService.toggleTheme();
+              if (mounted) setState(() {});
+            },
+            secondary: Icon(
+              themeService.themeMode == ThemeMode.dark
+                  ? Icons.dark_mode
+                  : Icons.light_mode,
+              color: Theme.of(context).iconTheme.color,
+            ),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.person,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            title: const Text('Profile'),
+            onTap: () {
+              Navigator.pop(context);
+              GoRouter.of(context).go('/profile');
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.logout,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            title: const Text('Logout'),
+            onTap: () async {
+              try {
+                await FirebaseAuth.instance.signOut();
+                if (mounted) {
+                  context.go('/login');
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Logout failed: ${e.toString()}')),
+                  );
+                }
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSearchBar() {
     return SlideTransition(
       position: Tween<Offset>(
@@ -255,7 +286,7 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[50],
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -269,13 +300,16 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
           controller: cityController,
           decoration: InputDecoration(
             hintText: 'Search for a city...',
-            hintStyle: TextStyle(color: Colors.grey[500]),
+            hintStyle: TextStyle(color: Theme.of(context).hintColor),
             border: InputBorder.none,
-            prefixIcon: Icon(Icons.search, color: Colors.grey[500]),
+            prefixIcon: Icon(Icons.search, color: Theme.of(context).hintColor),
             suffixIcon:
                 cityController.text.isNotEmpty
                     ? IconButton(
-                      icon: Icon(Icons.clear, color: Colors.grey[500]),
+                      icon: Icon(
+                        Icons.clear,
+                        color: Theme.of(context).hintColor,
+                      ),
                       onPressed: () {
                         cityController.clear();
                         setState(() {});
@@ -287,7 +321,10 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
               vertical: 16,
             ),
           ),
-          style: const TextStyle(fontSize: 16),
+          style: TextStyle(
+            fontSize: 16,
+            color: Theme.of(context).textTheme.bodyMedium?.color,
+          ),
           onSubmitted: (value) => fetchWeather(value),
         ),
       ),
@@ -303,9 +340,12 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'Fetching weather data...',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                ),
               ),
             ],
           ),
@@ -362,7 +402,10 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
             const SizedBox(height: 20),
             Text(
               'Search for a city to see weather',
-              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+              style: TextStyle(
+                fontSize: 18,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+              ),
             ),
           ],
         ),
@@ -373,11 +416,11 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
       scale: Tween<double>(begin: 0.95, end: 1.0).animate(
         CurvedAnimation(parent: scaleController, curve: Curves.easeOutBack),
       ),
-      child: buildWeatherCard(),
+      child: _buildWeatherCard(),
     );
   }
 
-  Widget buildWeatherCard() {
+  Widget _buildWeatherCard() {
     final weather = weatherData!;
     final mainWeather = weather.weather.isNotEmpty ? weather.weather[0] : null;
     final date = DateTime.now();
@@ -460,7 +503,6 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
                   child: Lottie.asset(
                     currentWeatherAnimation,
                     width: 200,
-
                     controller: weatherAnimationController,
                     onLoaded: (composition) {
                       weatherAnimationController
@@ -474,7 +516,6 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
 
                 Text(
                   '${weather.temperature.current.toStringAsFixed(1)}°',
-
                   style: const TextStyle(
                     fontSize: 64,
                     fontWeight: FontWeight.w300,
@@ -527,11 +568,6 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
                         'Pressure',
                         Icons.speed,
                       ),
-                      // _buildWeatherInfoItem(
-                      //   '${weather.clouds}%',
-                      //   'Clouds',
-                      //   Icons.cloud,
-                      // ),
                     ],
                   ),
                 ],
