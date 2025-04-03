@@ -7,10 +7,10 @@ class StarterPage extends StatefulWidget {
   const StarterPage({super.key});
 
   @override
-  State<StarterPage> createState() => _StarterPageState();
+  State<StarterPage> createState() => StarterPageState();
 }
 
-class _StarterPageState extends State<StarterPage> {
+class StarterPageState extends State<StarterPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

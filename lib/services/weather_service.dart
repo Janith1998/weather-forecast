@@ -5,7 +5,7 @@ class WeatherService {
   static const String apiKey = "2f628f57f1cd8a6b999fa894736207bb";
   static const String baseUrl = "https://api.openweathermap.org/data/2.5";
 
-  final Dio _dio = Dio(
+  final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
       connectTimeout: const Duration(seconds: 5),
@@ -15,7 +15,7 @@ class WeatherService {
 
   Future<WeatherData> getWeather(String cityName) async {
     try {
-      final response = await _dio.get(
+      final response = await dio.get(
         '/weather',
         queryParameters: {'q': cityName, 'appid': apiKey, 'units': 'metric'},
       );
@@ -27,7 +27,7 @@ class WeatherService {
 
   Future<WeatherData> getWeatherByLocation(double lat, double lon) async {
     try {
-      final response = await _dio.get(
+      final response = await dio.get(
         '/weather',
         queryParameters: {
           'lat': lat,
