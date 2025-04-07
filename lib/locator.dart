@@ -8,5 +8,5 @@ final getIt = GetIt.instance;
 void setupLocator() {
   getIt.registerLazySingleton<AuthService>(() => AuthService());
   getIt.registerLazySingleton<WeatherService>(() => WeatherService());
-  getIt.registerLazySingleton(() => ThemeService());
+  getIt.registerSingleton<ThemeService>(ThemeService());
 }
