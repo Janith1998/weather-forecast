@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,8 +16,8 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  late TextEditingController emailController;
+  late TextEditingController passwordController; // = TextEditingController();
   bool isLoading = false;
   final AuthService authService = getIt<AuthService>();
 
@@ -49,6 +51,14 @@ class LoginPageState extends State<LoginPage> {
         setState(() => isLoading = false);
       }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    log('LoginPage initState');
+    emailController = TextEditingController(text: 'l@gmail.com');
+    passwordController = TextEditingController(text: '12345678');
   }
 
   @override

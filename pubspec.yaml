@@ -19,6 +19,7 @@ dependencies:
   dio: ^5.8.0+1
   lottie: ^2.3.1
   provider: ^6.1.4
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:
