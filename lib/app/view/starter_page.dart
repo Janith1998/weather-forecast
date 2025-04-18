@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gorouter/services/app_state.dart';
+import 'package:gorouter/app/controller/app_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StarterPage extends StatefulWidget {
@@ -14,7 +14,6 @@ class StarterPageState extends State<StarterPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: Stack(
@@ -33,8 +32,8 @@ class StarterPageState extends State<StarterPage> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.2),
-                    Colors.black.withOpacity(0.5),
+                    Colors.black.withValues(alpha: 0.2),
+                    Colors.black.withValues(alpha: 0.5),
                   ],
                 ),
               ),
@@ -85,7 +84,7 @@ class StarterPageState extends State<StarterPage> {
                   Text(
                     'The best way to know about Weather. Start your journey with us today.',
                     style: theme.textTheme.titleLarge?.copyWith(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                     ),
                   ),
 

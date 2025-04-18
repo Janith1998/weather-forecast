@@ -5,7 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gorouter/locator.dart';
-import 'package:gorouter/services/auth_service.dart';
+
+import '../auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,6 +21,7 @@ class LoginPageState extends State<LoginPage> {
   late TextEditingController passwordController; // = TextEditingController();
   bool isLoading = false;
   final AuthService authService = getIt<AuthService>();
+  final EmailService emailService = getIt<EmailService>();
 
   Future<void> login() async {
     if (!formKey.currentState!.validate()) return;
@@ -32,6 +34,9 @@ class LoginPageState extends State<LoginPage> {
         passwordController.text.trim(),
       );
 
+      // Save the email for future use
+      emailService.updateEmail(emailController.text.trim());
+
       Fluttertoast.showToast(
         msg: "Login successful!",
         toastLength: Toast.LENGTH_SHORT,
@@ -41,7 +46,7 @@ class LoginPageState extends State<LoginPage> {
       if (mounted) {
         GoRouter.of(context).go('/home');
       }
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       Fluttertoast.showToast(
         msg: "An error occurred. Please try again.",
         toastLength: Toast.LENGTH_SHORT,
@@ -57,14 +62,26 @@ class LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     log('LoginPage initState');
-    emailController = TextEditingController(text: 'l@gmail.com');
-    passwordController = TextEditingController(text: '12345678');
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+
+    // // Initialize EmailService and listen to email stream
+    // emailService.init().then((_) {
+    //   // Listen to changes in email stream and update the controller
+    //   emailService.emailStream.listen((email) {
+    //     emailController.text = email; // Update the text field with the email
+    //   });
+    // });
+    // Get the latest email just once instead of listening
+    final lastEmail = emailService.currentEmail;
+    emailController.text = lastEmail;
   }
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    //emailService.dispose();
     super.dispose();
   }
 
@@ -162,6 +179,7 @@ class LoginPageState extends State<LoginPage> {
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     onPressed: isLoading ? null : login,
+                                    // ignore: sort_child_properties_last
                                     child:
                                         isLoading
                                             ? const CircularProgressIndicator(
@@ -210,30 +228,4 @@ class LoginPageState extends State<LoginPage> {
       ),
     );
   }
-}
-
-class BottomWaveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0, size.height - 50);
-    path.quadraticBezierTo(
-      size.width / 4,
-      size.height - 80,
-      size.width / 2,
-      size.height - 50,
-    );
-    path.quadraticBezierTo(
-      size.width * 3 / 4,
-      size.height - 20,
-      size.width,
-      size.height - 50,
-    );
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

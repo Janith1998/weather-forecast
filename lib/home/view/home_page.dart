@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gorouter/locator.dart';
-import 'package:gorouter/model/weather_model.dart';
-import 'package:gorouter/services/theme_service.dart';
-import 'package:gorouter/services/weather_service.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+
+import '../../app/app.dart';
+import '../home.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -156,8 +156,7 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final themeService = Provider.of<ThemeService>(context);
-    final isDarkMode = themeService.currentTheme == ThemeMode.dark;
+    Provider.of<ThemeService>(context);
 
     return Scaffold(
       key: scaffoldKey,
@@ -292,7 +291,7 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -437,7 +436,7 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.blue.withOpacity(0.3),
+            color: Colors.blue.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -465,7 +464,7 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
                       '${date.day}/${date.month}/${date.year}',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
                   ],
@@ -492,7 +491,7 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
                 mainWeather.description,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                 ),
               ),
             ],
@@ -530,7 +529,7 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
             const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(16),
               ),
               padding: const EdgeInsets.all(16),
@@ -632,7 +631,7 @@ class HomepageState extends State<Homepage> with TickerProviderStateMixin {
             label,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.8),
             ),
           ),
         ],

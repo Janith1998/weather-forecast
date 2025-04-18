@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:gorouter/model/weather_model.dart';
+import 'package:gorouter/home/model/weather_model.dart';
 
 class WeatherService {
   static const String apiKey = "2f628f57f1cd8a6b999fa894736207bb";

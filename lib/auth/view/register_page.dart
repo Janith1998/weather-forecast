@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gorouter/locator.dart';
-import 'package:gorouter/services/auth_service.dart';
+
+import '../auth.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -228,28 +229,28 @@ class RegisterPageState extends State<RegisterPage> {
   }
 }
 
-class BottomWaveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0, size.height - 50);
-    path.quadraticBezierTo(
-      size.width / 4,
-      size.height - 80,
-      size.width / 2,
-      size.height - 50,
-    );
-    path.quadraticBezierTo(
-      size.width * 3 / 4,
-      size.height - 20,
-      size.width,
-      size.height - 50,
-    );
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
+// class BottomWaveClipper extends CustomClipper<Path> {
+//   @override
+//   Path getClip(Size size) {
+//     var path = Path();
+//     path.lineTo(0, size.height - 50);
+//     path.quadraticBezierTo(
+//       size.width / 4,
+//       size.height - 80,
+//       size.width / 2,
+//       size.height - 50,
+//     );
+//     path.quadraticBezierTo(
+//       size.width * 3 / 4,
+//       size.height - 20,
+//       size.width,
+//       size.height - 50,
+//     );
+//     path.lineTo(size.width, 0);
+//     path.close();
+//     return path;
+//   }
 
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}
+//   @override
+//   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+// }
